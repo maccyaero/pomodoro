@@ -7,8 +7,8 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 25
-SHORT_BREAK_MIN = 5
+WORK_MIN = 0.10
+SHORT_BREAK_MIN = 0.05
 LONG_BREAK_MIN = 20
 reps = 0
 
@@ -22,13 +22,25 @@ def start_timer():
     work_seconds = WORK_MIN * 60
     short_break_seconds = SHORT_BREAK_MIN * 60
     long_break_seconds = LONG_BREAK_MIN * 60
+    mark=""
 
     if reps % 8 == 0:  # If it is the 8th rep
         countdown(long_break_seconds)
+        timer_label.config(text="Long Break", fg=RED)
     elif reps % 2 == 0:  # If it s the 2nd, 4th or 6th rep
         countdown(short_break_seconds)
+        timer_label.config(text="Short Break", fg=PINK)
     else:  # If it s the 1st, 3rd, 5th or 7th rep
         countdown(work_seconds)
+        timer_label.config(text="Work time", fg=GREEN)
+
+    if reps % 2 == 0:
+        mark += "✔️"
+        # checkmark_label.config(text=mark)
+        checkmark_label['text'] += mark
+
+
+
 
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
@@ -73,7 +85,7 @@ reset_button = tkinter.Button(text="Reset", )
 reset_button.grid(column=2, row=2)
 
 # Label
-checkmark_label = tkinter.Label(text="✔", fg=GREEN, bg=YELLOW)
+checkmark_label = tkinter.Label( fg=GREEN, bg=YELLOW)
 checkmark_label.grid(column=1, row=3)
 
 window.mainloop()
