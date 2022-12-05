@@ -7,13 +7,27 @@ RED = "#e7305b"
 GREEN = "#9bdeac"
 YELLOW = "#f7f5dd"
 FONT_NAME = "Courier"
-WORK_MIN = 0.10
-SHORT_BREAK_MIN = 0.05
+WORK_MIN = 25
+SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
+
+def reset():
+    # Remove all check marks.
+    # Change the reps back to 0
+    # Change the timer lable back to timer
+    # Reset Timer and stop the timer
+    window.after_cancel(timer)
+    canvas.itemconfig(time_text, text="00:00")
+    global reps
+    reps = 0
+    checkmark_label['text'] = ""
+    timer_label.config(text="", fg=GREEN)
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
@@ -22,7 +36,7 @@ def start_timer():
     work_seconds = WORK_MIN * 60
     short_break_seconds = SHORT_BREAK_MIN * 60
     long_break_seconds = LONG_BREAK_MIN * 60
-    mark=""
+    mark = ""
 
     if reps % 8 == 0:  # If it is the 8th rep
         countdown(long_break_seconds)
@@ -40,9 +54,6 @@ def start_timer():
         checkmark_label['text'] += mark
 
 
-
-
-
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def countdown(count):
     minutes = math.floor(count / 60)
@@ -51,7 +62,8 @@ def countdown(count):
         seconds = f"0{seconds}"
     canvas.itemconfig(time_text, text=f"{minutes}:{seconds}")
     if count > 0:
-        window.after(1000, countdown, count - 1)
+        global timer
+        timer = window.after(1000, countdown, count - 1)
     else:
         start_timer()
 
@@ -81,11 +93,11 @@ Start_button = tkinter.Button(text="Start", highlightthickness=0, command=start_
 Start_button.grid(column=0, row=2)
 
 # Reset Button
-reset_button = tkinter.Button(text="Reset", )
+reset_button = tkinter.Button(text="Reset", command=reset)
 reset_button.grid(column=2, row=2)
 
 # Label
-checkmark_label = tkinter.Label( fg=GREEN, bg=YELLOW)
+checkmark_label = tkinter.Label(fg=GREEN, bg=YELLOW)
 checkmark_label.grid(column=1, row=3)
 
 window.mainloop()
